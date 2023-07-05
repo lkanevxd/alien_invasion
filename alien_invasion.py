@@ -3,6 +3,7 @@ import pygame
 from settings import Settings
 from ship import Ship
 from bullet import Bullet
+from alien import Alien
 
 class AlienInvasion:
     """класс для управления ресурсами и поведением игры"""
@@ -23,6 +24,9 @@ class AlienInvasion:
 
         self.ship = Ship(self)
         self.bullets = pygame.sprite.Group()
+        self.aliens = pygame.sprite.Group()
+
+        self._create_fleet()
 
         # назначение цвета фона
         self.bg_color = (230, 230, 230)
@@ -40,7 +44,7 @@ class AlienInvasion:
             self.ship.blitme()
 
             # отображение последнего прорисованного экрана
-            pygame.display.flip() 
+            pygame.display.flip()
 
     def _check_events(self):
         """отслеживание нажатий клавиш и событий мыши"""
@@ -64,14 +68,14 @@ class AlienInvasion:
             self._fire_bullet()
         elif event.key == pygame.K_q:
             sys.exit()
-    
+
     def _check_keyup_events(self,event):
         """реакция на отпускание клавиш"""
         if event.key == pygame.K_RIGHT:
             self.ship.moving_right = False
         elif event.key == pygame.K_LEFT:
             self.ship.moving_left = False
-            
+
     def _fire_bullet(self):
         """создание нового снаряда и включение в группу bullets"""
         if len(self.bullets) < self.settings.bullets_allowed:
@@ -86,7 +90,7 @@ class AlienInvasion:
         # удаление снарядов, вышедших за край экрана
         for bullet in self.bullets.copy():
             if bullet.rect.bottom <= 0:
-                self.bullets.remove(bullet)  
+                self.bullets.remove(bullet)
 
     def _update_screen(self):
         """обновление изображения и отображение нового экрана"""
@@ -94,8 +98,16 @@ class AlienInvasion:
         self.ship.blitme()
         for bullet in self.bullets.sprites():
             bullet.draw_bullet()
-        pygame.display.flip() 
-  
+        self.aliens.draw(self.screen)
+
+        pygame.display.flip()
+
+    def _create_fleet(self):
+        """создание флота вторжения"""
+        # создание пришельца
+        alien = Alien(self)
+        self.aliens.add(alien)
+
 
 if __name__ == '__main__':
     # создание экземпляра и запуск игры

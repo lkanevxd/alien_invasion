@@ -29,11 +29,10 @@ class Ship():
             self.x += self.settings.ship_speed
         if self.moving_left and self.rect.left > 0:
             self.x -= self.settings.ship_speed
-          
+
         # обновление атрибута rect
         self.rect.x = self.x
 
     def blitme(self):
         """отрисовка корабля в текущей позиции"""
         self.screen.blit(self.image, self.rect)
-        
